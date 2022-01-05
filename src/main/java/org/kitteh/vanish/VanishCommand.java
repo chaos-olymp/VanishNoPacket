@@ -83,15 +83,14 @@ public final class VanishCommand implements CommandExecutor {
                 for (final Player player : this.plugin.getServer().getOnlinePlayers()) {
                     if ((player != null) && this.plugin.getManager().isVanished(player)) {
                         if (list.length() > 0) {
-                            list.append(ChatColor.DARK_AQUA);
-                            list.append(',');
+                            list.append(ChatColor.GRAY);
+                            list.append(", ");
                         }
-                        list.append(ChatColor.AQUA);
+                        list.append(ChatColor.YELLOW);
                         list.append(player.getName());
                     }
                 }
-                list.insert(0, "Vanished: ");
-                list.insert(0, ChatColor.DARK_AQUA);
+                list.insert(0, "§8[§e§l!§8] §c§lVanish §8» §7Aktuell unsichtbar: ");
                 sender.sendMessage(list.toString());
             } else {
                 this.denied(sender);
@@ -109,9 +108,9 @@ public final class VanishCommand implements CommandExecutor {
         // Check if I'm vanished
         if (goal.equalsIgnoreCase("check")) {
             if (this.plugin.getManager().isVanished(player)) {
-                player.sendMessage(ChatColor.DARK_AQUA + "You are invisible.");
+                player.sendMessage("§8[§e§l!§8] §c§lVanish §8» §7Du bist aktuell §4unsichtbar");
             } else {
-                player.sendMessage(ChatColor.DARK_AQUA + "You are visible.");
+                player.sendMessage("§8[§e§l!§8] §c§lVanish §8» §7Du bist aktuell §asichtbar");
             }
             return true;
         }
@@ -286,7 +285,7 @@ public final class VanishCommand implements CommandExecutor {
     }
 
     private void denied(@NonNull CommandSender sender) {
-        sender.sendMessage(ChatColor.AQUA + "[Vanish] " + ChatColor.DARK_AQUA + "Access denied.");
+        sender.sendMessage("§8[§e§l!§8] §c§lServer §8» §cDazu hast du keine Rechte");
     }
 
     private void toggle(@NonNull Player player, @NonNull String toggle) {

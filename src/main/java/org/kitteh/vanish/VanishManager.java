@@ -18,11 +18,14 @@
 package org.kitteh.vanish;
 
 import com.google.common.collect.ImmutableSet;
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -96,6 +99,7 @@ public final class VanishManager {
     private final Random random = new Random();
     private final ShowPlayerHandler showPlayer;
     private final NamespacedKey vanishCollideState;
+    private final BossBar bossBar = Bukkit.createBossBar("§7Unsichtbar", BarColor.WHITE, BarStyle.SOLID);
 
     public VanishManager(final @NonNull VanishPlugin plugin) {
         this.plugin = plugin;
@@ -220,20 +224,19 @@ public final class VanishManager {
         this.toggleVanishQuiet(togglingPlayer);
         final String vanishingPlayerName = togglingPlayer.getName();
         final String messageBit;
-        final String base = ChatColor.YELLOW + vanishingPlayerName + " has ";
+        final String base = "§8[§e§l!§8] §c§lVanish §8» §e" + vanishingPlayerName + " §7ist ";
         if (this.isVanished(togglingPlayer)) {
             Debuggle.log("LoudVanishToggle Vanishing " + togglingPlayer.getName());
             this.plugin.hooksVanish(togglingPlayer);
-            messageBit = "vanished. Poof.";
-
+            messageBit = "nun §4unsichtbar";
         } else {
             Debuggle.log("LoudVanishToggle Revealing " + togglingPlayer.getName());
             this.plugin.hooksUnvanish(togglingPlayer);
-            messageBit = "become visible.";
+            messageBit = "wieder §asichtbar";
             this.announceManipulator.vanishToggled(togglingPlayer);
         }
         final String message = base + messageBit;
-        togglingPlayer.sendMessage(ChatColor.DARK_AQUA + "You have " + messageBit);
+        togglingPlayer.sendMessage("§8[§e§l!§8] §c§lVanish §8» §7Du bist " + messageBit);
         this.plugin.messageStatusUpdate(message, togglingPlayer);
     }
 
@@ -277,10 +280,12 @@ public final class VanishManager {
                 vanishingPlayer.setCollidable(false);
             }
             this.vanishedPlayerNames.add(vanishingPlayerName);
+            bossBar.addPlayer(vanishingPlayer);
             this.plugin.getLogger().info(vanishingPlayerName + " disappeared.");
         } else {
             Debuggle.log("It's visible time! " + vanishingPlayer.getName());
             this.resetSleepingIgnored(vanishingPlayer);
+            bossBar.removePlayer(vanishingPlayer);
             this.removeVanished(vanishingPlayerName);
             byte coll = vanishingPlayer.getPersistentDataContainer().getOrDefault(this.vanishCollideState, PersistentDataType.BYTE, (byte) 0x00);
             if (coll == 0x01) {

@@ -17,7 +17,6 @@
  */
 package org.kitteh.vanish.listeners;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -108,7 +107,7 @@ public final class ListenPlayerOther implements Listener {
                 event.setCancelled(true);
                 if (fake) {
                     this.plugin.chestFakeOpen(player.getName());
-                    player.sendMessage(ChatColor.AQUA + "[VNP] Opening chest silently. Can not edit.");
+                    player.sendMessage("§8[§e§l!§8] §c§lVanish §8» §cDu bist unsichtbar. Kein editieren des Behälters möglich");
                 }
                 player.openInventory(inventory);
                 return;
@@ -146,7 +145,7 @@ public final class ListenPlayerOther implements Listener {
     public void onPlayerQuit(@NonNull PlayerQuitEvent event) {
         final Player player = event.getPlayer();
         if (this.plugin.getManager().isVanished(player)) {
-            this.plugin.messageStatusUpdate(ChatColor.DARK_AQUA + event.getPlayer().getName() + " has quit vanished");
+            this.plugin.messageStatusUpdate("§8[§e§l!§8] §c§lVanish §8» §e" + event.getPlayer().getName() + " §7hat den Server §4unsichtbar §7verlassen");
         }
         this.plugin.getManager().playerQuit(player);
         this.plugin.hooksQuit(player);
